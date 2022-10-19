@@ -1,0 +1,61 @@
+#usda 1.0
+
+(
+    defaultPrim = "Root"
+    endTimeCode = 100
+    metersPerUnit = 0.01
+    startTimeCode = 0
+    timeCodesPerSecond = 24
+    upAxis = "Y"
+)
+# this file is a mockup, it might be totally respectfull to 
+# the standard, just is just to show one example
+
+def Xform "Root"
+{
+    def LODModel "Model"
+    {
+        rel lods:heuristic = </Heuristics/byRadius>
+        rel lods:lodLevels = [</Levels/level0>,</Levels/level1>]
+        token lods:definitionOrder = "highestFirst"
+    }
+
+    def Xform "cameraTrs"
+    {
+        def Camera "Shot01"
+        {
+            #...
+        }
+    }
+}
+
+def Scope "Levels"
+{
+    def LODLevel "level0"
+    (    
+        prepend apiSchemas = ["CollectionAPI:targetPrims"]
+    )
+    {
+        rel collection:targetPrims:includes = [</some_meshes...>]
+
+        token lods:levelType = "shapes"
+    }
+
+    def LODLevel "level1"
+    {
+        token lods:levelModel = "auto"
+        # parametrization for an auto should be defined
+        # in the base class
+    }
+}
+
+def Scope "Heuristics"
+{
+    def LODDistanceHeuristic "byRadius"
+    {
+        string lods:name = "heuristic_byRadius"
+        token lods:transition = "fixed"
+        float[] lods:intervals = [10.0,100.0,inf]
+    }
+}
+
